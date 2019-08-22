@@ -1,0 +1,29 @@
+#!/bin/sh
+DATE=$(date +%Y-%m-%d-%H-%M-%S)
+CODE_DIR="/var/lib/jenkins/workspace/my-freestyle-job"
+WEB_DIR="/usr/share/nginx/"
+
+get_code_tar(){
+        cd $CODE_DIR && tar zcf /opt/web-$DATE.tar.gz ./*
+}
+
+scp_code_web(){
+        scp /opt/web-$DATE.tar.gz 10.0.0.7:$WEB_DIR
+}
+
+code_tarxf(){
+        ssh 10.0.0.7 "cd $WEB_DIR &&mkdir web-$DATE && tar xf web-$DATE.tar.gz -C web-$DATE"
+
+}
+ln_html(){
+         ssh 10.0.0.7 "cd $WEB_DIR && rm -rf html && ln -s web-$DATE html"
+}
+
+main(){
+
+        get_code_tar;
+        scp_code_web;
+        code_tarxf;
+        ln_html;
+}
+main
