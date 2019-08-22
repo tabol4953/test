@@ -1,0 +1,3 @@
+vim wtf.sh
+#!/bin/bash
+echo ok
